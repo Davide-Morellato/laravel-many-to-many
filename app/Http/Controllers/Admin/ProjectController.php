@@ -29,7 +29,7 @@ class ProjectController extends Controller
     {
         $types = Type::orderBy('name', 'asc')->get();
 
-        $technologies = Technology::orederBy('name', 'asc')->get();
+        $technologies = Technology::orderBy('name', 'asc')->get();
 
         return view('admin.projects.create', compact('types', 'technologies'));
     }
@@ -41,7 +41,7 @@ class ProjectController extends Controller
     {
         $form_data = $request->validated();
 
-        $form_data = $request->all();
+        // $form_data = $request->all();
 
         //controllo la generazione dello slug,
         //evitando che ci siano errori qualora ce ne sia uno già esistente
@@ -65,6 +65,10 @@ class ProjectController extends Controller
         $form_data['slug'] = $slug; //aggiungo all'array associativo in form_data lo slug
         $project = Project::create($form_data);
 
+        if($request->has('technologies')){
+            $project->technologies()->attach($form_data['technologies']);
+        }
+
         return to_route('admin.projects.show', $project);
     }
 
@@ -83,7 +87,11 @@ class ProjectController extends Controller
     {
         $types = Type::orderBy('name', 'asc')->get();
 
-        return view('admin.projects.edit', compact('project', 'types'));
+        $project->load(['technologies']);
+
+        $technologies = Technology::orderBy('name', 'asc')->get();
+
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -93,7 +101,7 @@ class ProjectController extends Controller
     {
         $form_data = $request->validated();
 
-        $form_data = $request->all();
+        // $form_data = $request->all();
 
         
         //controllo la generazione dello slug,
@@ -118,8 +126,19 @@ class ProjectController extends Controller
         $form_data['slug'] = $slug; //aggiungo all'array associativo in form_data lo slug
 
         $project->fill($form_data);
-
+        
         $project->save();
+
+
+        if($request->has('technologies')){
+
+            $project->technologies()->sync($request->technologies);
+
+        } else {
+
+            $project->technologies()->sync([]);
+        }
+
 
         return to_route('admin.projects.show', $project);
     }
@@ -131,6 +150,6 @@ class ProjectController extends Controller
     {
         $project->delete();
 
-        return view('admin.projects.index');
+        return to_route('admin.projects.index');
     }
 }

@@ -51,13 +51,14 @@
                     @else
                     <li>
                         <p>
-                            This Project hasn't related typess.
+                            This Project hasn't related types.
                         </p>
                     </li>
                     @endif
                 </ul>
             </div>
         </div>
+
         <div class="py-3 d-flex justify-content-evenly">
             <a href="{{route('admin.projects.edit', $project)}}" class="mt-4 btn btn-success text-light fw-bold px-3">Edit</a>
             <form action="{{route('admin.projects.destroy', $project)}}" method="POST" onsubmit="return deleteFunction()">

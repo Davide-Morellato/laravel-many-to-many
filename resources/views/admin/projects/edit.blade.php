@@ -23,6 +23,17 @@
                     @endforeach
                 </select>
             </div>
+            <div class="mb-4 d-flex gap-4">
+                <span class="fw-bold"> Select Tech: </span>
+                @foreach($technologies as $technology)
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="technologies[]" value="{{$technology->id}}" id="tech-{{$technology->id}}" @checked(in_array($technology->id, old('technologies', $project->technologies->pluck('id')->all())))>
+                    <label class="form-check-label" for="tech-{{$technology->id}}">
+                        {{$technology->name}}
+                    </label>
+                </div>
+                @endforeach
+            </div>
             <div class="mb-3">
                 <label for="url_github" class="form-label fw-bold">Link Git</label>
                 <input type="text" name="url_github" class="form-control" id="url_github" placeholder="Insert the url git" value="{{old('url_github', $project->url_github)}}">
