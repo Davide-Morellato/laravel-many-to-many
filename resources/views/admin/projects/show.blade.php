@@ -41,19 +41,21 @@
         <div class="container">
             <div class="row">
                 <ul>
-                    <!-- Stampo in pagina la lista di altri link in base al tipo -->
+                    <!-- Stampo in pagina la lista di altri link in base al tipo escludendo lo stesso aperto in dettaglio-->
                     @if($project->type !== null)
-                    @foreach($project->type->projects as $related_project)
-                    <li>
-                        <a href="{{route('admin.projects.show', $related_project)}}">{{$related_project->name_project}}</a>
-                    </li>
-                    @endforeach
+                        @foreach($project->type->projects as $related_project)
+                            @if($related_project->name_project !== $project->name_project)
+                            <li>
+                                <a href="{{route('admin.projects.show', $related_project)}}">{{$related_project->name_project}}</a>
+                            </li>
+                            @endif
+                        @endforeach
                     @else
-                    <li>
-                        <p>
-                            This Project hasn't related types.
-                        </p>
-                    </li>
+                        <li>
+                            <p>
+                                This Project hasn't related types.
+                            </p>
+                        </li>
                     @endif
                 </ul>
             </div>
